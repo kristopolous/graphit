@@ -1,10 +1,11 @@
 #include <iostream>
-#include <sstream>
 #include <vector>
 #include <cmath>
 #include <algorithm>
 #include <locale>
- 
+#include <stdio.h>
+#include <unistd.h>
+#define PI 3.14159265 
 using namespace std;
 class Sparkline {
     public:
@@ -43,22 +44,18 @@ class Sparkline {
             // and this point we've gone through all the 
             // integer values to interpolate ... we may have
             // a fractional value left.
-            //cout << " " << goal << " " << iy;
             if(goal > iy) {
               if((int)goal > (int)iy) {
                 lhs = (int)goal - iy;
                 nextval += lhs * data[ix];
-                //cout << " " << nextval << " " << (int)goal - iy;
 
                 ix++;
                 nextval += (goal - iy -lhs) * data[ix];
               } else {
-                //cout << " " << (goal - iy) << " " << data[ix];
                 // ix is already where we want it to be.
                 nextval += (goal - iy) * data[ix];
               }
             }
-            //cout << " | " << iy << " " << goal << " " << ix << " " << nextval << endl;
 
             // this is our interpolated value.
             interpolate.push_back(nextval / step);
@@ -117,16 +114,35 @@ int main( int argc, char **argv ){
     locale::global(locale("en_US.utf8"));
  
     Sparkline sl(charset);
-    //float tmp[] = {1, 2, 3, 4, 5, 6, 7, 8, 7, 6, 5, 4, 3, 2, 1};
+
+    /*
     float tmp[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-    std::vector<float> f (tmp, tmp + sizeof(tmp) / sizeof(tmp[0]) ); 
+    vector<float> f (tmp, tmp + sizeof(tmp) / sizeof(tmp[0]) ); 
+    */
+    vector<float> f;// (tmp, tmp + sizeof(tmp) / sizeof(tmp[0]) ); 
 
     int ix, iy;
-    for(ix = 3; ix < 30; ix++) {
-    sl.print(f, 
-        ix, 8,
-        0, 15);
+    for(iy = 0; iy < 5; iy++) {
+      f.push_back((float)sin (iy*PI/18));
     }
- 
+
+
+    for(;;) {
+      if(iy > 300) {
+        f.erase(f.begin());
+      }
+      iy++;
+      f.push_back((float)sin (iy*PI/18));
+
+      wcout<<"\033[0;0f";
+      for(ix = 30; ix < 120; ix+=20) {
+      sl.print(f, 
+          ix, 8,
+          -2, 2);
+      }
+      usleep(60000);
+    }
+
+   
     return 0;
 }
