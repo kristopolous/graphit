@@ -12,6 +12,10 @@ class Sparkline {
         Sparkline(wstring &cs) : charset( cs ){ }
         virtual ~Sparkline(){ }
  
+        void setchar(wstring cs) {
+          charset = cs;
+        }
+
         void print(
             vector<float> data, 
             int width, int height,
@@ -103,54 +107,65 @@ class Sparkline {
         }
 
     private:
-        wstring &charset;
+        wstring charset;
 };
  
 int main( int argc, char **argv ){
-  wstring charset = L" \u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588";
+  wstring awesome_unicode = L" \u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588";
+
+  // :-(
+  wstring sucker_ascii = L" _.-~'`";
  
-    // Mainly just set up utf-8, so wcout won't narrow our characters.
-    locale::global(locale("en_US.utf8"));
+  // Mainly just set up utf-8, so wcout won't narrow our characters.
+  locale::global(locale("en_US.utf8"));
+
+  Sparkline sl(awesome_unicode);
+
+  vector<float> f;
+
+  int ix, iy;
+  int hei = 9;
+  float val;
+  for(iy = 0; iy < 5; iy++) {
+    f.push_back((float)sin (iy*PI/18));
+  }
+
+
+  for(;;) {
+    if(iy > 300) {
+      f.erase(f.begin());
+    }
+    iy++;
+    val = sin (iy*PI/18);
+    f.push_back(val);
+
+    wcout<<"\033[0;0f";
+    hei = 7;
+
+    for(ix = 20; ix <= 80; ix+=30) {
+      sl.setchar(awesome_unicode);
+
+      sl.print(f, 
+          ix, hei--,
+          -1.5, 1.5);
+
+      sl.print(f, 
+          ix, (hei + 3) % 6 + 1,
+          -1.5, 1.5);
+
+      sl.setchar(sucker_ascii);
+
+      sl.print(f, 
+          ix, hei,
+          -1.5, 1.5);
+
+      sl.print(f, 
+          ix, (hei + 3) % 6 + 1,
+          -1.5, 1.5);
+    }
+    usleep(60000);
+  }
+
  
-    Sparkline sl(charset);
-
-    /*
-    float tmp[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1};
-    vector<float> f (tmp, tmp + sizeof(tmp) / sizeof(tmp[0]) ); 
-    */
-    vector<float> f;// (tmp, tmp + sizeof(tmp) / sizeof(tmp[0]) ); 
-
-    int ix, iy;
-    int hei = 9;
-    float val;
-    for(iy = 0; iy < 5; iy++) {
-      f.push_back((float)sin (iy*PI/18));
-    }
-
-
-    for(;;) {
-      if(iy > 300) {
-        f.erase(f.begin());
-      }
-      iy++;
-      val = sin (iy*PI/18);
-      f.push_back(val);
-
-      wcout<<"\033[0;0f";
-      hei = 6;
-
-      for(ix = 20; ix <= 110; ix+=30) {
-        sl.print(f, 
-            ix, hei--,
-            -2, 1.5);
-
-        sl.print(f, 
-            ix, (hei + 3) % 6 + 1,
-            -2, 1.5);
-      }
-      usleep(60000);
-    }
-
-   
-    return 0;
+  return 0;
 }
