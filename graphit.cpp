@@ -2,15 +2,15 @@
 #include <vector>
 #include <cmath>
 #include <locale>
-#include <stdio.h>
 #include <unistd.h>
 #define PI 3.14159265 
 
 using namespace std;
-class Sparkline {
+
+class Graphit {
     public:
-        Sparkline(wstring &cs) : charset( cs ){ }
-        virtual ~Sparkline(){ }
+        Graphit(wstring cs) : charset( cs ){ }
+        virtual ~Graphit(){ }
  
         void setchar(wstring cs) {
           charset = cs;
@@ -89,21 +89,18 @@ class Sparkline {
             for(col = 0; col < width; col++) {
               tmp = toGraph[col];
               if(tmp <= current_floor) {
-                wcout << " ";
+                tmp = 0;
+              } else if (tmp >= current_ceiling) {
+                tmp = m_charlen;
               } else {
-                if (tmp >= current_ceiling) {
-                  tmp = m_charlen;
-                } else {
-                  tmp %= m_charlen;
-                }
-                wcout << charset[ tmp ];
-                toGraph[col] -= tmp;
+                tmp %= m_charlen;
               }
+              wcout << charset[ tmp ];
+              toGraph[col] -= tmp;
             }
 
             wcout << endl;
           }
- 
         }
 
     private:
@@ -119,7 +116,7 @@ int main( int argc, char **argv ){
   // Mainly just set up utf-8, so wcout won't narrow our characters.
   locale::global(locale("en_US.utf8"));
 
-  Sparkline sl(awesome_unicode);
+  Graphit sl(awesome_unicode);
 
   vector<float> f;
 
@@ -166,6 +163,5 @@ int main( int argc, char **argv ){
     usleep(60000);
   }
 
- 
   return 0;
 }
