@@ -16,15 +16,7 @@ class Graphit {
           charset = cs;
         }
 
-        void print(
-            vector<float> data, 
-            int width, int height,
-            float min, float max
-        ) {
-          int m_charlen = charset.size() - 1;
-
-          int row, col;
-          float delta = (max - min);
+        int interpolate(vector<float>&interpolate, vector<float> data, int width ) {
           float step = (float)data.size() / width;
 
           // first we reduce the number of items down to the number
@@ -37,11 +29,8 @@ class Graphit {
           // we are fitting x units into y space
           float nextval, lhs;
           float iy = 0.0, pos = 0.0, goal = step;
-          int ix;
 
-          vector<float> interpolate;
-
-          for(ix = 0; ix < data.size();) {
+          for(int ix = 0; ix < data.size();) {
             nextval = 0.0;
 
             for(; (iy + 1) < goal; iy++) {
@@ -69,15 +58,81 @@ class Graphit {
             iy = goal;
             goal += step;
           }
+          return 0;
+        }
+
+        int rasterize(
+            vector<float> &toGraph,
+            vector<float> interpolate, int height, float min, float max) {
+          int m_charlen = charset.size() - 1;
+          float delta = (max - min);
 
           // now we have to find out what the graph height should be
           // this is basically value - min / (max - min)
-          vector<float> toGraph;
           vector<float>::const_iterator it;
           
           for(it = interpolate.begin(); it != interpolate.end(); it++) {
             toGraph.push_back( (int)(m_charlen * height * ((*it - min) / delta)));
           }
+
+          return 0;
+        }
+
+        vector<wstring> plot(vector<float> toPlot, int width, int height) {
+          int m_charlen = charset.size() - 1;
+
+          // now we output the actual graph one row at a time.
+          int 
+            row_ix,
+            col_ix,
+            tmp, 
+            current_floor, 
+            current_ceiling;
+
+          wstring col;
+          vector<wstring> buffer;
+          
+          for(row_ix = 0; row_ix < height; row_ix++) {
+            col.empty();
+
+            // if our value is less than this then it's a space.
+            current_floor = (height - row_ix - 1) * m_charlen;
+            current_ceiling = current_floor + m_charlen;
+
+            for(col_ix = 0; col_ix < width; col_ix++) {
+              tmp = toPlot[col_ix];
+              if(tmp <= current_floor) {
+                tmp = 0;
+              } else if (tmp >= current_ceiling) {
+                tmp = m_charlen;
+              } else {
+                tmp %= m_charlen;
+              }
+              col += charset[ tmp ];
+              toPlot[col_ix] -= tmp;
+            }
+            buffer.push_back(col);
+          }
+          return buffer;
+        }
+
+        void print(
+            vector<float> data, 
+            int width, int height,
+            float min, float max
+        ) {
+          int m_charlen = charset.size() - 1;
+
+          int row, col;
+
+          vector<float> interpolation;
+          this->interpolate(
+              interpolation, data, width);
+
+          vector<float> toGraph;
+          this->rasterize(
+            toGraph, interpolation, 
+            height, min, max);
 
           // now we output the actual graph one row at a time.
           int tmp, current_floor, current_ceiling;
@@ -136,10 +191,20 @@ int main( int argc, char **argv ){
     val = sin (iy*PI/18);
     f.push_back(val);
 
-    wcout<<"\033[0;0f";
     hei = 7;
 
-    for(ix = 20; ix <= 80; ix+=30) {
+    wcout<<"\033[0;0f";
+    for(ix = 80; ix <= 80; ix+=30) {
+      sl.setchar(sucker_ascii);
+
+      sl.print(f, 
+          ix, hei,
+          -1.5, 1.5);
+
+      sl.print(f, 
+          ix, (hei + 3) % 6 + 1,
+          -1.5, 1.5);
+
       sl.setchar(awesome_unicode);
 
       sl.print(f, 
@@ -150,15 +215,6 @@ int main( int argc, char **argv ){
           ix, (hei + 3) % 6 + 1,
           -1.5, 1.5);
 
-      sl.setchar(sucker_ascii);
-
-      sl.print(f, 
-          ix, hei,
-          -1.5, 1.5);
-
-      sl.print(f, 
-          ix, (hei + 3) % 6 + 1,
-          -1.5, 1.5);
     }
     usleep(60000);
   }
