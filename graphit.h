@@ -1,5 +1,8 @@
 #include <vector>
 
+#ifndef __d8b39cb3_015d_4087_a042_d2c7d98f5eba_GRAPHIT
+#define __d8b39cb3_015d_4087_a042_d2c7d98f5eba_GRAPHIT
+
 using namespace std;
 
 class Graphit {
@@ -23,4 +26,4 @@ class Graphit {
     static wstring m_charset;
 };
 
-wstring Graphit::m_charset = L"";
+#endif

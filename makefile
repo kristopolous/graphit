@@ -1,2 +1,2 @@
 graphit: graphit.o
-	g++ graphit.o -o graphit
+	g++ test.cpp graphit.o -o test
