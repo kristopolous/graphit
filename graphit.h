@@ -16,6 +16,8 @@ class Graphit {
     // Takes a vector of floats, data, and renders them
     // inside of a curses window, win, plotting between
     // Y values min and max.
+    //
+    // Returns 0 on success.
     int print_curses(
         vector<float> data, 
         WINDOW *win,
@@ -34,15 +36,17 @@ class Graphit {
   private:
 
     // Process will take a vector of floats,
-    // data and then do an 
+    // data, and then do the following 
+    // sequentially with respect to the width
+    // height, min, and max specified. 
     //
     //  1 interpolation
     //  2 rasterization
     //  3 plot
     //
-    // of that data with respect to the width
-    // height, min, and max specified. The
-    // results will go into the output.
+    // The results will go into the vector of
+    // wstrings supplied by the first argument,
+    // output.
     //
     // Generally speaking this is all that
     // is needed to interact with directly.
@@ -63,12 +67,13 @@ class Graphit {
         vector<float> data, 
         int width);
 
-    // Takes an vector interpolated,
+    // Takes a vector interpolated,
     // a plotting height, height, and
     // a minimum and maximum to plot,
     // min and max, and scales the 
     // interpolation to values
     // which can be plotted.
+    //
     // Returns 0 on success.
     int rasterize(
         vector<float> &rasterized,
@@ -81,6 +86,7 @@ class Graphit {
     // and fills up a vector of wstrings
     // with the character set according
     // to those values
+    //
     // Returns 0 on success.
     int plot(
         vector<wstring> &buffer,
@@ -89,7 +95,7 @@ class Graphit {
 
 
     // The plotting charset, defined
-    // statically through useUnicode
+    // statically through use_unicode
     static wstring m_charset;
 };
 
