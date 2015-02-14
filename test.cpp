@@ -39,7 +39,6 @@ int main( int argc, char **argv ){
 
     sl.print_curses(f, local_win, -1.5, 1.5);
 
-    wrefresh(local_win); 
 
     /*
     hei = 7;

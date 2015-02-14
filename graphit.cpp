@@ -48,6 +48,7 @@ int Graphit::print_curses(
     );
   }
 
+  wrefresh(win); 
   return ret;
 }
 
