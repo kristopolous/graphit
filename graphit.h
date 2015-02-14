@@ -42,14 +42,14 @@ class Graphit {
     //
     //  1 interpolation
     //  2 rasterization
-    //  3 plot
+    //  3 plotting
     //
     // The results will go into the vector of
     // wstrings supplied by the first argument,
     // output.
     //
     // Generally speaking this is all that
-    // is needed to interact with directly.
+    // is needed to be interacted with directly.
     //
     // Returns 0 on success.
     int process(
