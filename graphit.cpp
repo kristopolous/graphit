@@ -1,16 +1,22 @@
 #include <iostream>
-#include <cmath>
-#include <locale>
-#include <unistd.h>
 #include "graphit.h"
 
 using namespace std;
 
 wstring Graphit::m_charset = L"";
+
 Graphit::Graphit() {
   if(m_charset.length() == 0) {
     Graphit::useUnicode(true);
   }
+}
+
+int Graphit::print_curses(
+    vector<float> data, 
+    WINDOW*win,
+    float min, float max
+) {
+  return 0;
 }
 
 bool Graphit::useUnicode(bool value) {
