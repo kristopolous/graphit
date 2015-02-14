@@ -198,7 +198,7 @@ int Graphit::print_curses(
   return ret;
 }
 
-int Graphit::print(
+int Graphit::print_direct(
     vector<float> data, 
     int width, int height,
     float min, float max

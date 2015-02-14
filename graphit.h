@@ -29,7 +29,7 @@ class Graphit {
     // calls.
     //
     // Returns 0 on success.
-    int print(
+    int print_direct(
         vector<float> data, 
         int width, int height,
         float min, float max);
