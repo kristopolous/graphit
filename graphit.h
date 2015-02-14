@@ -18,19 +18,30 @@ class Graphit {
         float min, float max
     );
 
-    void print(
+    int print(
         vector<float> data, 
         int width, int height,
         float min, float max
     );
 
   private:
+
+    int process(
+      vector<wstring> &output,
+      vector<float> data, 
+      int width, int height,
+      float min, float max
+    );
+
     int interpolate(
         vector<float> &interpolate, 
         vector<float> data, 
         int width);
 
-    vector<wstring> plot(vector<float> toPlot, int width, int height);
+    int plot(
+        vector<wstring> &buffer,
+        vector<float> toPlot,
+        int width, int height);
 
     int rasterize(
         vector<float> &toGraph,

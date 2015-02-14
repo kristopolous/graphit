@@ -17,7 +17,7 @@ int main( int argc, char **argv ){
   int ix, iy;
   int hei = 9;
   float val;
-  for(iy = 0; iy < 5; iy++) {
+  for(iy = 0; iy < 10; iy++) {
     f.push_back((float)sin (iy*PI/18));
   }
 
@@ -33,18 +33,16 @@ int main( int argc, char **argv ){
     hei = 7;
 
     wcout<<"\033[0;0f";
-    for(ix = 80; ix <= 80; ix+=30) {
-      //sl.setchar(awesome_unicode);
 
-      sl.print(f, 
-          ix, hei--,
-          -1.5, 1.5);
+    sl.print(f, 
+        50, hei--,
+        -1.5, 1.5);
 
-      sl.print(f, 
-          ix, (hei + 3) % 6 + 1,
-          -1.5, 1.5);
+  
+    sl.print(f, 
+        70, (hei + 3) % 6 + 1,
+        -1.5, 1.5);
 
-    }
     usleep(60000);
   }
 

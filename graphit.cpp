@@ -16,6 +16,7 @@ int Graphit::print_curses(
     WINDOW*win,
     float min, float max
 ) {
+  // 
   return 0;
 }
 
@@ -69,12 +70,14 @@ int Graphit::interpolate(vector<float>&interpolate, vector<float> data, int widt
     iy = goal;
     goal += step;
   }
+
   return 0;
 }
 
 int Graphit::rasterize(
     vector<float> &toGraph,
-    vector<float> interpolate, int height, float min, float max) {
+    vector<float> interpolate, 
+    int height, float min, float max) {
 
   int m_charlen = Graphit::m_charset.size() - 1;
   float delta = (max - min);
@@ -90,7 +93,10 @@ int Graphit::rasterize(
   return 0;
 }
 
-vector<wstring> Graphit::plot(vector<float> toPlot, int width, int height) {
+int Graphit::plot(
+    vector<wstring> &buffer,
+    vector<float> toPlot, 
+    int width, int height) {
   int m_charlen = m_charset.size() - 1;
 
   // now we output the actual graph one row at a time.
@@ -102,10 +108,9 @@ vector<wstring> Graphit::plot(vector<float> toPlot, int width, int height) {
     current_ceiling;
 
   wstring col;
-  vector<wstring> buffer;
   
   for(row_ix = 0; row_ix < height; row_ix++) {
-    col.empty();
+    col.clear();
 
     // if our value is less than this then it's a space.
     current_floor = (height - row_ix - 1) * m_charlen;
@@ -125,48 +130,61 @@ vector<wstring> Graphit::plot(vector<float> toPlot, int width, int height) {
     }
     buffer.push_back(col);
   }
-  return buffer;
+
+  return 0;
 }
 
-void Graphit::print(
+int Graphit::process(
+  vector<wstring> &output,
+  vector<float> data, 
+  int width, int height,
+  float min, float max
+) {
+  int ret = 0;
+
+  vector<float> interpolation;
+  vector<float> toPlot;
+
+  ret = this->interpolate( interpolation, data, width);
+  if(ret) {
+    return ret;
+  }
+
+  ret = this->rasterize( toPlot, interpolation, height, min, max);
+  if(ret) {
+    return ret;
+  }
+
+  ret = this->plot( output, toPlot, width, height);
+  if(ret) {
+    return ret;
+  }
+
+  return ret;
+}
+
+int Graphit::print(
     vector<float> data, 
     int width, int height,
     float min, float max
 ) {
-  int m_charlen = m_charset.size() - 1;
+  int ret = 0;
 
-  int row, col;
+  vector<wstring> output;
+  ret = this->process(
+      output, data,
+      width, height,
+      min, max
+  );
 
-  vector<float> interpolation;
-  this->interpolate(
-      interpolation, data, width);
-
-  vector<float> toGraph;
-  this->rasterize(
-    toGraph, interpolation, 
-    height, min, max);
-
-  // now we output the actual graph one row at a time.
-  int tmp, current_floor, current_ceiling;
-  for(row = 0; row < height; row++) {
-    // if our value is less than this then it's a space.
-    current_floor = (height - row - 1) * m_charlen;
-    current_ceiling = current_floor + m_charlen;
-
-    for(col = 0; col < width; col++) {
-      tmp = toGraph[col];
-      if(tmp <= current_floor) {
-        tmp = 0;
-      } else if (tmp >= current_ceiling) {
-        tmp = m_charlen;
-      } else {
-        tmp %= m_charlen;
-      }
-      wcout << m_charset[ tmp ];
-      toGraph[col] -= tmp;
-    }
-
-    wcout << endl;
+  if(ret) {
+    return ret;
   }
+
+  vector<wstring>::const_iterator it;
+  for(it = output.begin(); it != output.end(); it++) {
+    wcout << (*it) << endl;
+  }
+
+  return ret;
 }
- 
