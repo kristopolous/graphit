@@ -15,6 +15,7 @@ bool Graphit::use_unicode(bool value) {
   } else {
     m_charset = L" _.-~'`";
   }
+  return value;
 }
 
 int Graphit::interpolate(vector<float>&interpolated, vector<float> data, int width ) {
