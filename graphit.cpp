@@ -133,6 +133,10 @@ int Graphit::process(
 ) {
   int ret = 0;
 
+  if(min > max || width <= 0 || height <= 0) {
+    return -1;
+  }
+
   vector<float> interpolation;
   vector<float> toPlot;
 
@@ -162,7 +166,7 @@ int Graphit::print_curses(
   int ret = 0;
 
   // let's get the width and height from an ncurses macro
-  if(!win) {
+  if(!win || min > max) {
     return -1;
   }
 
