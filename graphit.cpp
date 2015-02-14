@@ -1,8 +1,6 @@
 #include <iostream>
 #include "graphit.h"
 
-using namespace std;
-
 wstring Graphit::m_charset = L"";
 
 Graphit::Graphit() {
