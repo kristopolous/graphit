@@ -16,8 +16,39 @@ int Graphit::print_curses(
     WINDOW*win,
     float min, float max
 ) {
-  // 
-  return 0;
+  int ret = 0;
+
+  // let's get the width and height from an ncurses macro
+  if(!win) {
+    return -1;
+  }
+
+  int width, height;
+  getmaxyx(win, height, width);
+
+  vector<wstring> output;
+  ret = this->process(
+      output, data,
+      width, height,
+      min, max
+  );
+
+  if(ret) {
+    return ret;
+  }
+  
+  int row = 0;
+  vector<wstring>::const_iterator it;
+  for(it = output.begin(); it != output.end(); it++) {
+    mvwaddnwstr(
+      win,
+      row++, 0,
+      (const wchar_t *)((*it).c_str()), 
+      (*it).size()
+    );
+  }
+
+  return ret;
 }
 
 bool Graphit::useUnicode(bool value) {

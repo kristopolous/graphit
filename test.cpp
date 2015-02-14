@@ -6,9 +6,16 @@
 #define PI 3.14159265 
 
 int main( int argc, char **argv ){
- 
   // Mainly just set up utf-8, so wcout won't narrow our characters.
   locale::global(locale("en_US.utf8"));
+
+	initscr();	
+	cbreak();			
+  curs_set(0);
+	WINDOW *local_win;
+
+	local_win = newwin(10, 60, 5, 5);
+	box(local_win, 0 , 0);
 
   Graphit sl;
 
@@ -32,6 +39,11 @@ int main( int argc, char **argv ){
 
     hei = 7;
 
+    sl.print_curses(f,
+        local_win,
+        -1.5, 1.5);
+	  wrefresh(local_win);		/* Show that box 		*/
+    /*
     wcout<<"\033[0;0f";
 
     sl.print(f, 
@@ -42,6 +54,7 @@ int main( int argc, char **argv ){
     sl.print(f, 
         70, (hei + 3) % 6 + 1,
         -1.5, 1.5);
+        */
 
     usleep(60000);
   }
