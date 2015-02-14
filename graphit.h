@@ -13,7 +13,7 @@ class Graphit {
     // Toggles on or off unicode characters
     static bool use_unicode(bool value);
 
-    // Takes a vector of floats, data and renders 
+    // Takes a vector of floats, data, and renders them
     // inside of a curses window, win, plotting between
     // Y values min and max.
     int print_curses(
