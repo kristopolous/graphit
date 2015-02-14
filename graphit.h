@@ -11,6 +11,7 @@ class Graphit {
     Graphit();
 
     // Toggles on or off unicode characters
+    // Returns whatever bool you give it.
     static bool use_unicode(bool value);
 
     // Takes a vector of floats, data, and renders them
