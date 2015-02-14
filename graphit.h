@@ -58,21 +58,25 @@ class Graphit {
         int width, int height,
         float min, float max);
 
-    // Takes the vector data and does
+    // Takes the vector, data, and does
     // a linear interpolation of it to
-    // a width, width, into the vector
-    // interpolated.  Returns 0 on success.
+    // a width, width, into a vector
+    // of floats, interpolated.  
+    //
+    // Returns 0 on success.
     int interpolate(
         vector<float> &interpolated, 
         vector<float> data, 
         int width);
 
-    // Takes a vector interpolated,
-    // a plotting height, height, and
-    // a minimum and maximum to plot,
-    // min and max, and scales the 
-    // interpolation to values
-    // which can be plotted.
+    // Takes a vector of floats, 
+    // interpolated, a plotting height, 
+    // height, and a minimum and 
+    // maximum to plot, min and max, 
+    // and scales the interpolation 
+    // to values which can be plotted,
+    // depositing those in a vector
+    // of floats, rasterized.
     //
     // Returns 0 on success.
     int rasterize(
@@ -83,9 +87,10 @@ class Graphit {
 
     // Takes a vector, rasterized,
     // and a given width and height,
-    // and fills up a vector of wstrings
-    // with the character set according
-    // to those values
+    // and fills up a vector of wstrings,
+    // buffer, with the character set
+    // specified to the static use_unicode()
+    // according to those values.
     //
     // Returns 0 on success.
     int plot(
@@ -95,7 +100,7 @@ class Graphit {
 
 
     // The plotting charset, defined
-    // statically through use_unicode
+    // statically through use_unicode()
     static wstring m_charset;
 };
 
